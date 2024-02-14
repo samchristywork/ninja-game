@@ -19,12 +19,12 @@ public class Item {
     spriteSheet = image;
   }
 
-  public void draw(GraphicsContext graphics_context) {
-    graphics_context.setImageSmoothing(false);
+  public void draw(GraphicsContext gc) {
+    gc.setImageSmoothing(false);
 
-    graphics_context.drawImage(
-        spriteSheet, ((frame / 3) % numFrames) * sourceSize.x, 0, sourceSize.x,
-        sourceSize.y, position.x, position.y, size.x, size.y);
+    gc.drawImage(spriteSheet, ((frame / 3) % numFrames) * sourceSize.x, 0,
+        sourceSize.x, sourceSize.y, position.x, position.y, size.x,
+        size.y);
     frame++;
   }
 

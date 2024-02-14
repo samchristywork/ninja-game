@@ -17,7 +17,7 @@ public class App extends Application {
   ArrayList<Tile> tiles = new ArrayList<Tile>();
 
   Character character;
-  GraphicsContext graphics_context;
+  GraphicsContext gc;
   KeyboardState keyboardState = new KeyboardState();
   Text text = new Text();
   Vec2 dimensions = new Vec2(640, 480);
@@ -50,36 +50,34 @@ public class App extends Application {
 
     // Draw tiles
     for (Tile tile : tiles) {
-      tile.draw(graphics_context);
+      tile.draw(gc);
     }
 
     // Draw shadow
-    graphics_context.setGlobalAlpha(0.2);
-    graphics_context.drawImage(gradientImage, 0, 0, 100, 100,
+    gc.setGlobalAlpha(0.2);
+    gc.drawImage(gradientImage, 0, 0, 100, 100,
         character.position.x - character.size.x / 2,
-        character.position.y + character.size.y -
-            character.size.y / 4,
+        character.position.y + character.size.y - character.size.y / 4,
         character.size.x * 2, character.size.y / 2);
-    graphics_context.setGlobalAlpha(1);
+    gc.setGlobalAlpha(1);
 
     // Draw items
     for (Item item : items) {
-      item.draw(graphics_context);
+      item.draw(gc);
       item.update();
     }
 
     // Draw character
-    character.draw(graphics_context, keyboardState);
+    character.draw(gc, keyboardState);
 
     // Draw score
-    text.draw(graphics_context, "" + score, 10, 10);
+    text.draw(gc, "" + score, 10, 10);
 
     // Draw health
-    text.draw(graphics_context, "" + (int) health, dimensions.x - 50, 10);
+    text.draw(gc, "" + (int) health, dimensions.x - 50, 10);
 
     float angle = (float) (Math.sin(System.currentTimeMillis() / 100) * 10);
-    drawRotatedImage(graphics_context, heartImage, angle, dimensions.x - 70, 17,
-        20, 20);
+    drawRotatedImage(gc, heartImage, angle, dimensions.x - 70, 17, 20, 20);
   }
 
   private void update() {
@@ -170,7 +168,7 @@ public class App extends Application {
     }
 
     Canvas canvas = new Canvas(dimensions.x, dimensions.y);
-    graphics_context = canvas.getGraphicsContext2D();
+    gc = canvas.getGraphicsContext2D();
 
     Scene scene = new Scene(new StackPane(canvas), dimensions.x, dimensions.y);
 

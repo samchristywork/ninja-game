@@ -15,12 +15,11 @@ public class Tile {
     spriteSheet = image;
   }
 
-  public void draw(GraphicsContext graphics_context) {
-    graphics_context.setImageSmoothing(false);
+  public void draw(GraphicsContext gc) {
+    gc.setImageSmoothing(false);
 
-    graphics_context.drawImage(spriteSheet, 0 + offset.x * 20,
-        480 + offset.y * 20, 20, 20, position.x,
-        position.y, size.x, size.y);
+    gc.drawImage(spriteSheet, 0 + offset.x * 20, 480 + offset.y * 20, 20, 20,
+        position.x, position.y, size.x, size.y);
     frame++;
   }
 }

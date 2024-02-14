@@ -17,30 +17,28 @@ class Character {
     spriteSheet = image;
   }
 
-  public void draw(GraphicsContext graphics_context,
-      KeyboardState keyboardState) {
+  public void draw(GraphicsContext gc, KeyboardState keyboardState) {
     boolean moving = keyboardState.up || keyboardState.down ||
         keyboardState.left || keyboardState.right;
 
-    graphics_context.setImageSmoothing(false);
+    gc.setImageSmoothing(false);
 
-    graphics_context.save();
+    gc.save();
     Rotate r = new Rotate(Math.sin(tickle * 10) * 15, position.x + size.x / 2,
         position.y + size.y / 2);
-    graphics_context.setTransform(r.getMxx(), r.getMyx(), r.getMxy(),
-        r.getMyy(), r.getTx(), r.getTy());
+    gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(),
+        r.getTy());
 
     if (moving) {
-      graphics_context.drawImage(spriteSheet, 0, 1 + ((frame / 10) % 4) * 16,
-          16, 16, position.x, position.y, size.x,
-          size.y);
+      gc.drawImage(spriteSheet, 0, 1 + ((frame / 10) % 4) * 16, 16, 16,
+          position.x, position.y, size.x, size.y);
     } else {
       frame = 0;
-      graphics_context.drawImage(spriteSheet, 0, 0, 16, 16, position.x,
-          position.y, size.x, size.y);
+      gc.drawImage(spriteSheet, 0, 0, 16, 16, position.x, position.y, size.x,
+          size.y);
     }
 
-    graphics_context.restore();
+    gc.restore();
 
     frame++;
   }
