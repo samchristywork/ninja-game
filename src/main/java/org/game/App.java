@@ -26,13 +26,14 @@ public class App extends Application {
   Image heartImage = new Image("file:./assets/heart.png");
   Image characterImage = new Image("file:./assets/character.png");
   Image tilesetImage = new Image("file:./assets/tileset.png");
+  Image gradientImage = new Image("file:./assets/gradient_black.png");
 
   int score = 0;
   float health = 99;
 
   public void drawRotatedImage(GraphicsContext gc, Image image, double angle,
-                               double x, double y, double width,
-                               double height) {
+      double x, double y, double width,
+      double height) {
     gc.save();
     rotate(gc, angle, x + width / 2, y + height / 2);
     gc.drawImage(image, x, y, width, height);
@@ -42,29 +43,43 @@ public class App extends Application {
   public void rotate(GraphicsContext gc, double angle, double px, double py) {
     Rotate r = new Rotate(angle, px, py);
     gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(),
-                    r.getTy());
+        r.getTy());
   }
 
   private void render() {
-    graphics_context.clearRect(0, 0, dimensions.x, dimensions.y);
 
+    // Draw tiles
     for (Tile tile : tiles) {
       tile.draw(graphics_context);
     }
 
+    // Draw shadow
+    graphics_context.setGlobalAlpha(0.2);
+    graphics_context.drawImage(gradientImage, 0, 0, 100, 100,
+        character.position.x - character.size.x / 2,
+        character.position.y + character.size.y -
+            character.size.y / 4,
+        character.size.x * 2, character.size.y / 2);
+    graphics_context.setGlobalAlpha(1);
+
+    // Draw items
     for (Item item : items) {
       item.draw(graphics_context);
       item.update();
     }
 
+    // Draw character
     character.draw(graphics_context, keyboardState);
+
+    // Draw score
     text.draw(graphics_context, "" + score, 10, 10);
 
-    text.draw(graphics_context, "" + (int)health, dimensions.x - 50, 10);
+    // Draw health
+    text.draw(graphics_context, "" + (int) health, dimensions.x - 50, 10);
 
-    float angle = (float)(Math.sin(System.currentTimeMillis() / 100) * 10);
+    float angle = (float) (Math.sin(System.currentTimeMillis() / 100) * 10);
     drawRotatedImage(graphics_context, heartImage, angle, dimensions.x - 70, 17,
-                     20, 20);
+        20, 20);
   }
 
   private void update() {
@@ -159,7 +174,65 @@ public class App extends Application {
 
     Scene scene = new Scene(new StackPane(canvas), dimensions.x, dimensions.y);
 
-    stage.setOnCloseRequest((event) -> { System.exit(0); });
+    scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+      switch (key.getCode()) {
+        case ESCAPE:
+          System.exit(0);
+          break;
+        case UP:
+          keyboardState.up = true;
+          break;
+        case DOWN:
+          keyboardState.down = true;
+          break;
+        case LEFT:
+          keyboardState.left = true;
+          break;
+        case RIGHT:
+          keyboardState.right = true;
+          break;
+        default:
+          System.out.println("Key Pressed: " + key.getCode());
+          break;
+      }
+    });
+
+    scene.addEventHandler(KeyEvent.KEY_RELEASED, (key) -> {
+      switch (key.getCode()) {
+        case UP:
+          keyboardState.up = false;
+          break;
+        case DOWN:
+          keyboardState.down = false;
+          break;
+        case LEFT:
+          keyboardState.left = false;
+          break;
+        case RIGHT:
+          keyboardState.right = false;
+          break;
+        default:
+          System.out.println("Key Released: " + key.getCode());
+          break;
+      }
+    });
+
+    scene.addEventHandler(MouseEvent.MOUSE_CLICKED, (mouse) -> {
+      if (mouse.getX() > character.position.x &&
+          mouse.getX() < character.position.x + character.size.x &&
+          mouse.getY() > character.position.y &&
+          mouse.getY() < character.position.y + character.size.y) {
+        character.tickle = 1;
+        health += 10;
+        if (health > 99) {
+          health = 99;
+        }
+      }
+    });
+
+    stage.setOnCloseRequest((event) -> {
+      System.exit(0);
+    });
 
     stage.setScene(scene);
     stage.show();
