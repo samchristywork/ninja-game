@@ -115,6 +115,45 @@ public class App extends Application {
     character.position.x = dimensions.x / 2;
     character.position.y = dimensions.y / 2;
 
+    // Add corner tile
+    {
+      Tile t = new Tile(tilesetImage);
+      tiles.add(t);
+      t.collide = true;
+    }
+
+    // Add top tiles
+    for (int i = 0; i < 20; i++) {
+      Tile t = new Tile(tilesetImage);
+      tiles.add(t);
+      t.offset.x = 1;
+      t.position.x = 40 + i * 40;
+      t.position.y = 0;
+      t.collide = true;
+    }
+
+    // Add left tiles
+    for (int i = 0; i < 20; i++) {
+      Tile t = new Tile(tilesetImage);
+      tiles.add(t);
+      t.offset.y = 1;
+      t.position.x = 0;
+      t.position.y = 40 + i * 40;
+      t.collide = true;
+    }
+
+    // Add floor tiles
+    for (int i = 0; i < 20; i++) {
+      for (int j = 0; j < 20; j++) {
+        Tile t = new Tile(tilesetImage);
+        tiles.add(t);
+        t.offset.x = 1;
+        t.offset.y = 1;
+        t.position.x = 40 + i * 40;
+        t.position.y = 40 + j * 40;
+      }
+    }
+
     Canvas canvas = new Canvas(dimensions.x, dimensions.y);
     graphics_context = canvas.getGraphicsContext2D();
 
