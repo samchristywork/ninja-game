@@ -68,6 +68,45 @@ public class App extends Application {
   }
 
   private void update() {
+    Vec2 old_position = new Vec2(0, 0);
+    old_position.x = character.position.x;
+    old_position.y = character.position.y;
+
+    character.update(keyboardState);
+
+    health -= 0.1;
+
+    for (Item item : items) {
+      if (character.position.x < item.position.x + item.size.x &&
+          character.position.x + character.size.x > item.position.x &&
+          character.position.y < item.position.y + item.size.y &&
+          character.position.y + character.size.y > item.position.y) {
+
+        // Dangerous as fuck
+        items.remove(item);
+
+        score += item.value;
+
+        health += item.health;
+        if (health > 99) {
+          health = 99;
+        }
+        break;
+      }
+    }
+
+    for (Tile tile : tiles) {
+      if (tile.collide) {
+        if (character.position.x < tile.position.x + tile.size.x &&
+            character.position.x + character.size.x > tile.position.x &&
+            character.position.y < tile.position.y + tile.size.y &&
+            character.position.y + character.size.y > tile.position.y) {
+          character.position.x = old_position.x;
+          character.position.y = old_position.y;
+          break;
+        }
+      }
+    }
   }
 
   @Override
