@@ -30,7 +30,41 @@ public class App extends Application {
   int score = 0;
   float health = 99;
 
+  public void drawRotatedImage(GraphicsContext gc, Image image, double angle,
+                               double x, double y, double width,
+                               double height) {
+    gc.save();
+    rotate(gc, angle, x + width / 2, y + height / 2);
+    gc.drawImage(image, x, y, width, height);
+    gc.restore();
+  }
+
+  public void rotate(GraphicsContext gc, double angle, double px, double py) {
+    Rotate r = new Rotate(angle, px, py);
+    gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(),
+                    r.getTy());
+  }
+
   private void render() {
+    graphics_context.clearRect(0, 0, dimensions.x, dimensions.y);
+
+    for (Tile tile : tiles) {
+      tile.draw(graphics_context);
+    }
+
+    for (Item item : items) {
+      item.draw(graphics_context);
+      item.update();
+    }
+
+    character.draw(graphics_context, keyboardState);
+    text.draw(graphics_context, "" + score, 10, 10);
+
+    text.draw(graphics_context, "" + (int)health, dimensions.x - 50, 10);
+
+    float angle = (float)(Math.sin(System.currentTimeMillis() / 100) * 10);
+    drawRotatedImage(graphics_context, heartImage, angle, dimensions.x - 70, 17,
+                     20, 20);
   }
 
   private void update() {
