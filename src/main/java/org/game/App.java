@@ -240,6 +240,53 @@ public class App extends Application {
     new Thread(() -> {
       int frame = 0;
       while (true) {
+        if (frame % 30 == 0) {
+
+          Item i = new Item(heartImage);
+          items.add(i);
+          i.numFrames = 1;
+
+          int margin = 100;
+          i.position.x = (int) (Math.random() * (dimensions.x - margin * 2) + margin);
+          i.position.y = (int) (Math.random() * (dimensions.y - margin * 2) + margin);
+          i.sourceSize.x = 9;
+          i.sourceSize.y = 8;
+          i.size.x = 20;
+          i.size.y = 20;
+
+          i.value = 0;
+          i.health = 10;
+        }
+
+        if (frame % 30 == 0) {
+          Vec2 position = new Vec2(0, 0);
+          int margin = 100;
+          position.x = (int) (Math.random() * (dimensions.x - margin * 2) + margin);
+          position.y = (int) (Math.random() * (dimensions.y - margin * 2) + margin);
+
+          for (int n = 0; n < 20; n++) {
+            Item i = new Item(coinImage);
+            items.add(i);
+
+            i.position.x = position.x;
+            i.position.y = position.y;
+
+            float spread = 30;
+            i.velocity.x = (int) (Math.random() * spread) - (int) spread / 2;
+            i.velocity.y = (int) (Math.random() * spread) - (int) spread / 2;
+
+            i.frame = (int) (Math.random() * 100);
+
+            int random = (int) (Math.random() * 100);
+            if (random < 10) {
+              i.value = 100;
+              i.size.x = 20;
+              i.size.y = 20;
+            }
+          }
+        }
+        frame++;
+
         update();
         render();
         try {
@@ -251,5 +298,7 @@ public class App extends Application {
     }).start();
   }
 
-  public static void main(String[] args) { launch(); }
+  public static void main(String[] args) {
+    launch();
+  }
 }
